@@ -847,8 +847,26 @@ void panGPSats(int first_col, int first_line){
     
     if ((eph >= 200) && blinker)
        gps_str = 0x20;
-    
-    osd.printf("%c%2i", gps_str, osd_satellites_visible);    
+
+    int hdopA = 0;
+    int hdopB = 0;
+    if (osd_fix_type < 2)
+    {
+    	hdopA = 0;
+	hdopB = 0;
+    }
+    else
+    {
+    	hdopA = eph/100;
+	hdopB = eph%100;
+    }
+   
+    if(osd_fix_type <=3)
+      osd.printf("%c%2i|H%02d.%02d", gps_str, osd_satellites_visible, hdopA, hdopB);    
+    else if(osd_fix_type == 4)
+      osd.printf("%c%2i|G%02d.%02d", gps_str, osd_satellites_visible, hdopA, hdopB);
+    else if(osd_fix_type == 5)
+      osd.printf("%c%2i|R%02d.%02d", gps_str, osd_satellites_visible, hdopA, hdopB);
     osd.closePanel();
 }
 
